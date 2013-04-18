@@ -1,0 +1,34 @@
+/// This is a board piece.
+exports.Piece = funcion ()
+{
+    /// The position on the board of the piece.
+    var position = new Point(0, 0);
+
+    /// Every action in the game has an update step associated
+    /// with it, so the game knows in which order actions are
+    /// performed.
+    var updateStep = 0;
+
+}
+
+/// This is a game board.
+exports.Board = funcion ()
+{
+    /// The list of pieces on the board (\see Piece).
+    var pieces = [];
+
+    /// The current game update step.
+    var step = 0;
+
+    /// With this fuction you can add pieces to the board.
+    var append = function (piece) {
+	pieces.push(piece);
+    }
+
+    /// Increments the game update step.
+    var incStep = function () { this.step++; }
+
+}
+
+/// The boards pieces. For now specified as a sort of singleton.
+exports.board = new Board();
