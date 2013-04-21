@@ -24,7 +24,7 @@ var sendFile = function (res, filename)
 		
 		// If it does not exists send error page.
 		if (!exists) {
-			sendError(res, 404, 'File Not Found (' + pathname + ')');
+			sendError(res, 404, 'File Not Found (' + filename + ')');
 			return;
 		}
 			
@@ -100,21 +100,36 @@ var api0Pieces = function (tree, query, res)
 
 var handleApi0Request = function (tree, query, res)
 {
-
+	// Set result api version.
 	res.body.api = 0;
 
-	if (tree[0] == 'pieces') {
+	// Doe something according to the request.
+	switch (tree[0]) {
+	case 'pieces':
 		api0Pieces(tree.splice(1), query, res);
-	} else {
+		break;
+		
+	default:
 		res.code = 404;
 		res.body.error = "Api call unknown (" + util.inspect(tree) + ").";
-	}
+		break;
+	};
 	
 	// Add the step number to the body.
 	res.body.step = game.board.step;
 
 }
 
+var handleResourceRequest = function (res, query)
+{
+	// Strip /resources/
+	var filename = query.pathname.substr(11);
+
+	console.log("Sending file: " + filename);
+
+	sendFile(res, filename);
+
+}
 
 var handleRequest = function (req, res)
 {
@@ -128,10 +143,13 @@ var handleRequest = function (req, res)
 		
 	// Check if we need to send the root document.
 	switch (query.pathname) {
+	
+	// Send the root document.
 	case '/':
 		sendFile(res, 'index.html');
 		return;
 	
+	// Special case for the favicon.
 	case 'favicon.ico':
 		sendError(res, 404, '');
 		return;
@@ -154,6 +172,10 @@ var handleRequest = function (req, res)
 		
 		sendError(res, result.code, JSON.stringify(result.body));
 		
+	} else if (tree[0] == 'resources') {
+	
+		handleResourceRequest(res, query);
+	
 	} else {
 		
 		sendUnknown(res);
