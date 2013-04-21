@@ -14,8 +14,8 @@ For now I only implemented a few api calls:
 - "/api/0/pieces/N": returns piece number N.
 - "/api/0/pieces/N?call=setpos&x=X&y=Y": sets the position of piece N tp (X, Y).
 
-Next to the api call the HTTP server also can serve files. At the moment it only serves
-the root ("/") file which correspondes to the www/index.html file.
+Next to the api call the HTTP server also can serve files. The root ('/') will translate
+to www/index.html and all other urls starting with /resources/* will transtale to /www/*.
 
 Game Step
 =========
